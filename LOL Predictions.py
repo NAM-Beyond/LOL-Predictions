@@ -1,5 +1,6 @@
 import re
 import requests
+import time
 from bs4 import BeautifulSoup
 
 MatchSchedule_URL = "https://lol.gamepedia.com/LEC/2019_Season/Summer_Season"
@@ -60,6 +61,7 @@ for User_Name in LeaderBoard_Users :
         else :
             Match_List[i][5] += 1
     User_Prediction = []
+    time.sleep(1)
 
 for i in range(0,len(Match_List)) :
     print(Match_List[i])
