@@ -1,13 +1,11 @@
 import re
 import requests
-import time
 from bs4 import BeautifulSoup
 
 # Initiating main variables
 Championships = ["0", "LCK", "LCS", "LEC", "LMS", "LPL"]
 Years = ["0", "2019"]
 Seasons = ["0", "Summer"]
-
 Match_List = []
 Match_Date = []
 Team_One = []
@@ -36,22 +34,17 @@ MatchSchedule_Page = BeautifulSoup(MatchSchedule_Response.text, "html.parser")
 Match_Dates = MatchSchedule_Page.body.find_all("tr", class_ = re.compile("matchlist-date matchlist-you-date"))
 for n in range(0,len(Match_Dates)) :
     Match_Date.append(Match_Dates[n].td.span.encode_contents().decode("UTF-8"))
-
 Team_Ones = MatchSchedule_Page.body.find_all("td", class_ = "matchlist-team1")
 for i in Team_Ones :
     Team_One.append(i["data-teamhighlight"])
-
 Team_Twos = MatchSchedule_Page.body.find_all("td", class_ = "matchlist-team2")
 for i in Team_Twos :
     Team_Two.append(i["data-teamhighlight"])
-
 Team_Results = MatchSchedule_Page.body.find_all("td", class_ = "matchlist-score")
 for i in Team_Results :
     Team_Result.append(i.encode_contents().decode("UTF-8"))
-
 for i in range(0,len(Match_Date)) :
     Match_List.append([Match_Date[i],Team_One[i],0,0,0,0,Team_Two[i]])
-
 for i in range(0,int(len(Team_Result) / 2)) :
     Match_List[i][3] = Team_Result[2 * i]
     Match_List[i][4] = Team_Result[2 * i + 1]
@@ -78,8 +71,12 @@ for User_Name in LeaderBoard_Users :
         else :
             Match_List[i][5] += 1
     User_Prediction = []
-    # Adding a sleep time on 1 second in order to avoid to be flagged as a spammer
-    time.sleep(1)
+    
+for i in range(0, len(Match_List)) :
+    if Match_List[i][2] + Match_List[i][5] != 0 :
+        Sums = Match_List[i][2] + Match_List[i][5]
+        Match_List[i][2] = Match_List[i][2] / (Sums)
+        Match_List[i][5] = Match_List[i][5] / (Sums)
 
 # Printing the results
 for i in range(0,len(Match_List)) :
